@@ -52,6 +52,10 @@ SQLite DB and all run-paths:
 /var/lib/cif
 ```
 
+# Docker Maintainer:
+
+Scott Finlon (@sfinlon)
+
 # COPYRIGHT AND LICENSE
 
 Copyright (C) 2017-2019 [the CSIRT Gadgets Foundation](http://csirtgadgets.org)
