@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+chown -R cif:cif /var/lib/cif
+chown -R cif:cif /etc/cif
+chown -R cif:cif /var/log/cif
+/usr/bin/supervisord -n -c /usr/local/etc/supervisord.conf
