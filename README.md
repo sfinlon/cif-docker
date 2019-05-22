@@ -15,7 +15,7 @@ bash buildit.sh
 bash runit.sh
 ```
 
-# Get an interactive shell onto the container:
+# Get an interactive shell if the container is already running:
 ```
 docker exec -it cifv3 /bin/bash
 ```
