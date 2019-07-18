@@ -5,6 +5,9 @@ https://github.com/csirtgadgets/bearded-avenger-deploymentkit/wiki
 
 https://github.com/csirtgadgets/bearded-avenger-deploymentkit/releases
 
+This will create look for and create a 'cif-data' volume to store the cif.db database.
+This will allow the tokens/indicators to be persistent across container rebuilds.
+
 # Build the container by running:
 ```
 bash buildit.sh
