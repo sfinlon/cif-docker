@@ -39,9 +39,12 @@ RUN pip install 'setuptools>=18.3,<34.0' 'ansible>=2.4,<2.5' ; \
     ansible-galaxy install csirtgadgets.cif,0.0.14 ; \
     cd /tmp/bearded-avenger-deploymentkit-3.0.4/ubuntu16 && bash ../ansible.sh
 
-
 WORKDIR /tmp
 RUN rm -Rf /tmp/bearded-avenger* /tmp/ba.tar.gz /tmp/dk.tar.gz
+
+RUN cp /home/cif/.cif.yml /var/lib/cif/ ; \
+    cp /etc/cif/csirtg-smrt.yml /var/lib/cif/ ; \
+    cp /etc/cif/cif-router.yml /var/lib/cif/ 
 
 WORKDIR /home/cif
 

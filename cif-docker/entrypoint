@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
+rm -f /tmp/cif_httpd.pid
+rm -f /tmp/cif_router.pid
 chown -R cif:cif /var/lib/cif
 chown -R cif:cif /etc/cif
 chown -R cif:cif /var/log/cif
+cp /var/lib/cif/.cif.yml /home/cif/
+cp /var/lib/cif/csirtg-smrt.yml /etc/cif/
+cp /var/lib/cif/cif-router.yml /etc/cif/
 /usr/bin/supervisord -n -c /usr/local/etc/supervisord.conf
