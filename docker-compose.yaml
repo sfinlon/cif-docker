@@ -1,0 +1,18 @@
+---
+
+version: '3'
+services:
+  cif:
+    build: cif-docker/
+    container_name: cif
+    restart: on-failure
+    ports:
+      - 5000:5000
+    volumes:
+      - cif-config:/etc/cif
+      - cif-logs:/var/log/cif
+      - cif-db:/var/lib/cif
+volumes:
+  cif-config:
+  cif-logs:
+  cif-db:
