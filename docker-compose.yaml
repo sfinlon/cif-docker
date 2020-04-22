@@ -4,7 +4,6 @@ version: '3'
 services:
   cif:
     build: cif-docker/
-    container_name: cif
     restart: on-failure
     ports:
       - 5000:5000
