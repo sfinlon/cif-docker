@@ -22,29 +22,36 @@ RUN echo "resolvconf resolvconf/linkify-resolvconf boolean false" | debconf-set-
     mkdir -p /etc/cron.d ; \
     useradd cif
 
-RUN apt-get update && apt-get install -y sudo resolvconf supervisor curl wget python-pip build-essential \
-        python-dev python2.7 python-pip python-dev aptitude python-pip libffi-dev libssl-dev sqlite3 software-properties-common ; \
-    cd /tmp && wget https://github.com/csirtgadgets/bearded-avenger/archive/3.0.4.tar.gz -O ba.tar.gz && tar -zxf ba.tar.gz ; \
-    wget https://github.com/csirtgadgets/bearded-avenger-deploymentkit/archive/3.0.4.tar.gz -O dk.tar.gz && tar -zxf dk.tar.gz
+RUN apt-get update ; \
+    apt-get -y dist-upgrade ; \
+    apt-get install -y --no-install-recommends apt-utils ; \
+    apt-get install -y build-essential python3-dev python3-minimal python3-pip wget sudo ; \
+    update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1 ; \
+    update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1 ; \
+    python -m pip install --upgrade pip ; \
+    python -m pip install 'setuptools>=18.3,<34.0' 'ansible>=2.4,<2.5' ; \
+    ansible-galaxy install csirtgadgets.cif,0.0.14 ; \
+    apt-get --auto-remove --yes remove python3-yaml ; \
+    cd /tmp ; \
+    wget https://github.com/csirtgadgets/bearded-avenger/archive/3.0.8.tar.gz -O ba.tar.gz ; \
+    tar -zxf ba.tar.gz ; \
+    wget https://github.com/csirtgadgets/bearded-avenger-deploymentkit/archive/3.0.8.tar.gz -O dk.tar.gz ; \
+    tar -zxf dk.tar.gz
 
-WORKDIR /tmp/bearded-avenger-3.0.4
+WORKDIR /tmp/bearded-avenger-3.0.8
 
-RUN pip install --upgrade pip
-
-RUN pip install -r dev_requirements.txt
+RUN python -m pip install -r dev_requirements.txt
 
 RUN CIF_ENABLE_INSTALL=1 python setup.py install
 
-RUN pip install 'setuptools>=18.3,<34.0' 'ansible>=2.4,<2.5' ; \
-    ansible-galaxy install csirtgadgets.cif,0.0.14 ; \
-    cd /tmp/bearded-avenger-deploymentkit-3.0.4/ubuntu16 && bash ../ansible.sh
+RUN cd /tmp/bearded-avenger-deploymentkit-3.0.8/ubuntu16 && bash ../ansible.sh
 
 WORKDIR /tmp
 RUN rm -Rf /tmp/bearded-avenger* /tmp/ba.tar.gz /tmp/dk.tar.gz
 
 RUN cp /home/cif/.cif.yml /var/lib/cif/ ; \
     cp /etc/cif/csirtg-smrt.yml /var/lib/cif/ ; \
-    cp /etc/cif/cif-router.yml /var/lib/cif/ 
+    cp /etc/cif/cif-router.yml /var/lib/cif/
 
 WORKDIR /home/cif
 
