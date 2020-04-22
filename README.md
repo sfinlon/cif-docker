@@ -10,7 +10,7 @@ This will allow the tokens/indicators to be stored across container rebuilds.
 
 # Build the container by running:
 ```bash
-docker-compose builder
+docker-compose build
 ```
 
 # Start the container
