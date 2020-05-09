@@ -1,0 +1,12 @@
+#!/usr/bin/execlineb
+
+s6-setuidgid cif
+
+export CIF_RUNTIME_PATH /var/lib/cif
+export CIF_DATA_PATH /var/lib/cif
+export CIF_ROUTER_TRACE 1
+export CIF_ROUTER_PIDFILE /tmp/cif_router.pid
+export CIF_HUNTER_ADVANCED 1
+export CIF_HUNTER_EXCLUDE "osint.bambenekconsulting.com:dga"
+
+/usr/local/bin/cif-router --config=/etc/cif/cif-router.yml --hunter-threads 2 --gatherer-threads 2

@@ -1,0 +1,11 @@
+#!/usr/bin/execlineb
+
+s6-setuidgid cif
+
+export CSIRTG_SMRT_RUNTIME_PATH /var/lib/cif
+export CSIRTG_SMRT_RULES_PATH /etc/cif/rules/default
+export CSIRTG_SMRT_CACHE_PATH /var/lib/cif
+export CSIRTG_SMRT_FIREBALL_SIZE 500
+export CSIRTG_SMRT_GOBACK_DAYS 3
+
+/usr/local/bin/csirtg-smrt --remember --service --client cif --fireball --delay 5 --goback 7 --config /etc/cif/csirtg-smrt.yml
