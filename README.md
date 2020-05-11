@@ -53,6 +53,47 @@ cif-logs:/var/log/cif
 cif-db:/var/lib/cif
 ```
 
+# s6 init
+
+## docker-compose.override.yml
+
+    ---
+
+    version: '3'
+
+    services:
+      cif:
+        build:
+          dockerfile: Dockerfile.s6
+        image: cif-docker-s6
+        #volumes:
+        #  - ./db-sqlite:/db-sqlite
+
+- build the image "cif-docker-s6"
+```bash
+docker-compose build
+```
+
+## s6 - import sqlite cif.db
+
+This imports cif.db and api keys into the container at runtime.
+* changes to the db will not persist across sessions
+* this only works for sqlite based installs (no Elastic support)
+
+1. get the following files from an existing install:
+    ```
+    /var/lib/cif/cif.db
+    /var/lib/cif/cif-router.yml
+    /var/lib/cif/csirtg-smrt.yml
+    /home/cif/.cif.yml
+    ```
+
+1. create the folder db-sqlite and uncomment the volumes section of
+  docker-compose.override.yml
+
+1. place the files in the db-sqlite folder (and rename .cif.yml to cif.yml)
+
+
 # Docker Maintainer:
 
 Scott Finlon (@sfinlon)

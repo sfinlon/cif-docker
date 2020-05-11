@@ -1,6 +1,7 @@
 FROM ubuntu:16.04
 LABEL developer="Wes Young <wes@csirtgadgets.org>"
 LABEL docker_maintainer="Scott Finlon (@sfinlon)"
+LABEL docker_maintainer_s6="Chris O'Donnell <chodonne@gmail.com>"
 
 EXPOSE 5000
 
@@ -10,16 +11,12 @@ ENV SUDO_USER root
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8
 
-COPY supervisord/supervisord.conf /usr/local/etc/supervisord.conf
-COPY supervisord/entrypoint /
-
 ADD https://github.com/csirtgadgets/bearded-avenger-deploymentkit/archive/3.0.8.tar.gz /tmp/dk.tar.gz
 ADD https://github.com/csirtgadgets/bearded-avenger/archive/3.0.8.tar.gz /tmp/ba.tar.gz
 
 RUN echo "resolvconf resolvconf/linkify-resolvconf boolean false" | debconf-set-selections ; \
     mkdir -p /etc/resolvconf/resolv.conf.d ; \
     mkdir -p /var/log/cif ; \
-    chmod 755 /entrypoint ; \
     mkdir -p /var/lib/cif ; \
     mkdir -p /etc/cif ; \
     mkdir -p /etc/cron.d ; \
@@ -45,12 +42,19 @@ RUN pip install --upgrade pip ; \
     cd /tmp/bearded-avenger-deploymentkit-3.0.8/ubuntu16 ; \
     bash ../ansible.sh
 
-WORKDIR /tmp
-
 RUN cp /home/cif/.cif.yml /var/lib/cif/ ; \
     cp /etc/cif/csirtg-smrt.yml /var/lib/cif/ ; \
     cp /etc/cif/cif-router.yml /var/lib/cif/
 
+ADD https://github.com/just-containers/s6-overlay/releases/download/v1.22.1.0/s6-overlay-amd64.tar.gz /tmp/s6-overlay-amd64.tar.gz
+
+RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / ; \
+    rm -f /tmp/s6-overlay-amd64.tar.gz
+
+COPY ./s6/etc-fix-attrs.d/ /etc/fix-attrs.d/
+COPY ./s6/etc-cont-init.d/ /etc/cont-init.d/
+COPY ./s6/etc-services.d/ /etc/services.d/
+
 WORKDIR /home/cif
 
-ENTRYPOINT ["/entrypoint", "-n"]
+ENTRYPOINT ["/init"]

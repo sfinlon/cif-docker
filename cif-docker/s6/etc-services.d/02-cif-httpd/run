@@ -1,0 +1,9 @@
+#!/usr/bin/execlineb
+
+s6-setuidgid cif
+
+export CIF_HTTPD_LISTEN 0.0.0.0
+export CIF_RUNTIME_PATH /var/lib/cif
+export CIF_HTTPD_PIDFILE /tmp/cif_httpd.pid
+
+/usr/local/bin/gunicorn -w 4 --max-requests-jitter 5 -b :5000 cif.httpd:app --log-level DEBUG --worker-class gevent --max-requests 25 --graceful-timeout 60
